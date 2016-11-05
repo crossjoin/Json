@@ -1,0 +1,61 @@
+{
+  "name": "crossjoin/json",
+  "type": "library",
+  "description": "",
+  "keywords": [
+    "php",
+    "json",
+    "json_encode",
+    "json_decode",
+    "UTF-8",
+    "UTF-16",
+    "UTF-16BE",
+    "UTF-16LE",
+    "UTF-32",
+    "UTF-32BE",
+    "UTF-32LE"
+  ],
+  "homepage": "https://github.com/crossjoin/Json",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Christoph Ziegenberg",
+      "email": "ziegenberg@crossjoin.com",
+      "role": "Developer"
+    }
+  ],
+  "support": {
+    "issues": "https://github.com/crossjoin/Json/issues",
+    "source": "https://github.com/crossjoin/Json"
+  },
+  "require": {
+    "php": "^5.3.3 || ^7.0"
+  },
+  "require-dev": {
+    "php": "^5.3.3 || ^7.0",
+    "phpunit/phpunit" : "^4.8.23",
+    "ext-iconv": "*"
+  },
+  "suggest": {
+    "ext-iconv": "To support JSON in other encodings than UTF-8, either the iconv, intl or mbstring extension is required.",
+    "ext-intl" : "To support JSON in other encodings than UTF-8, either the iconv, intl or mbstring extension is required.",
+    "ext-mbstring" : "To support JSON in other encodings than UTF-8, either the iconv, intl or mbstring extension is required."
+  },
+  "autoload": {
+    "files": [
+      "src/functions.php"
+    ],
+    "psr-4": {
+      "Crossjoin\\Json\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Crossjoin\\Json\\Tests\\Unit\\": "tests/unit/",
+      "Crossjoin\\Json\\Tests\\Mock\\": "tests/mock/"
+    }
+  },
+  "bin": [
+    "scripts/browscap"
+  ]
+}
