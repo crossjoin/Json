@@ -1,8 +1,8 @@
 # Json Encoder/Decoder
-JSON decoder and encoder for PHP, based on the native PHP json_* function, but with improved Unicode support following [RFC 7159](https://tools.ietf.org/html/rfc7159). 
+JSON decoder and encoder for PHP, based on the native PHP json_* functions, but with improved Unicode support, following [RFC 7159](https://tools.ietf.org/html/rfc7159). 
 
 
-The native PHP functions only support JSON files encoded in UTF-8 and without a byte order mark (BOM).
+The native PHP functions only support JSON string that are encoded in UTF-8 and do not contain a byte order mark (BOM).
 
 This library wraps the PHP functions and enables you to decode and encode JSON files with the following additional encodings that are allowed by the RFC:
 - UTF-16BE
