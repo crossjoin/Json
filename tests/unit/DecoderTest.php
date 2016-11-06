@@ -133,7 +133,7 @@ class DecoderTest extends \PHPUnit_Framework_TestCase
     /**
      * @return array
      */
-    public function dataInvalidIgnoreBomValues()
+    public function dataNoBooleanTypes()
     {
         return array(
             array(1),
@@ -148,10 +148,25 @@ class DecoderTest extends \PHPUnit_Framework_TestCase
     /**
      * @return array
      */
-    public function dataInvalidEncodingValue()
+    public function dataNoStringTypes()
     {
         return array(
             array(1),
+            array(1.23),
+            array(true),
+            array(array('foo')),
+            array(new \stdClass()),
+            array(fopen('php://memory', 'r'))
+        );
+    }
+
+    /**
+     * @return array
+     */
+    public function dataNoIntegerTypes()
+    {
+        return array(
+            array('string'),
             array(1.23),
             array(true),
             array(array('foo')),
@@ -193,7 +208,7 @@ class DecoderTest extends \PHPUnit_Framework_TestCase
     /**
      * @param mixed $value
      *
-     * @dataProvider dataInvalidIgnoreBomValues
+     * @dataProvider dataNoBooleanTypes
      *
      * @expectedException \Crossjoin\Json\Exception\InvalidArgumentException
      * @expectedExceptionCode 1478195542
@@ -207,7 +222,7 @@ class DecoderTest extends \PHPUnit_Framework_TestCase
     /**
      * @param string $json
      *
-     * @dataProvider dataInvalidEncodingValue
+     * @dataProvider dataNoStringTypes
      *
      * @expectedException \Crossjoin\Json\Exception\InvalidArgumentException
      * @expectedExceptionCode 1478195652
@@ -267,7 +282,7 @@ class DecoderTest extends \PHPUnit_Framework_TestCase
     public function testDecodingValidDataWithPreservedBom($json, $expectedData, $expectedEncoding)
     {
         $decoder = new Decoder(false);
-        $decoder->decode($json);
+        $decoder->getEncoding($json);
     }
 
     /**
@@ -282,5 +297,65 @@ class DecoderTest extends \PHPUnit_Framework_TestCase
     {
         $decoder = new Decoder(false);
         $decoder->decode($json);
+    }
+
+    /**
+     * @param mixed $json
+     *
+     * @dataProvider dataNoStringTypes
+     *
+     * @expectedException \Crossjoin\Json\Exception\InvalidArgumentException
+     * @expectedExceptionCode 1478418105
+     * @covers ::decode
+     */
+    public function testDecodeArgumentInvalidJson($json)
+    {
+        $decoder = new Decoder();
+        $decoder->decode($json);
+    }
+
+    /**
+     * @param mixed $assoc
+     *
+     * @dataProvider dataNoBooleanTypes
+     *
+     * @expectedException \Crossjoin\Json\Exception\InvalidArgumentException
+     * @expectedExceptionCode 1478418106
+     * @covers ::decode
+     */
+    public function testDecodeArgumentInvalidAssoc($assoc)
+    {
+        $decoder = new Decoder();
+        $decoder->decode('"string"', $assoc);
+    }
+
+    /**
+     * @param mixed $depth
+     *
+     * @dataProvider dataNoIntegerTypes
+     *
+     * @expectedException \Crossjoin\Json\Exception\InvalidArgumentException
+     * @expectedExceptionCode 1478418107
+     * @covers ::decode
+     */
+    public function testDecodeArgumentInvalidDepth($depth)
+    {
+        $decoder = new Decoder();
+        $decoder->decode('"string"', false, $depth);
+    }
+
+    /**
+     * @param mixed $options
+     *
+     * @dataProvider dataNoIntegerTypes
+     *
+     * @expectedException \Crossjoin\Json\Exception\InvalidArgumentException
+     * @expectedExceptionCode 1478418108
+     * @covers ::decode
+     */
+    public function testDecodeArgumentInvalidOptions($options)
+    {
+        $decoder = new Decoder();
+        $decoder->decode('"string"', false, 512, $options);
     }
 }

@@ -86,7 +86,7 @@ class EncoderTest extends \PHPUnit_Framework_TestCase
     /**
      * @return array
      */
-    public function dataInvalidEncodingTypes()
+    public function dataNoStringTypes()
     {
         return array(
             array(1),
@@ -98,6 +98,21 @@ class EncoderTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    /**
+     * @return array
+     */
+    public function dataNoIntegerTypes()
+    {
+        return array(
+            array('string'),
+            array(1.23),
+            array(true),
+            array(array('foo')),
+            array(new \stdClass()),
+            array(fopen('php://memory', 'r'))
+        );
+    }
+    
     /**
      * @return array
      */
@@ -157,7 +172,7 @@ class EncoderTest extends \PHPUnit_Framework_TestCase
     /**
      * @param mixed $value
      *
-     * @dataProvider dataInvalidEncodingTypes
+     * @dataProvider dataNoStringTypes
      *
      * @expectedException \Crossjoin\Json\Exception\InvalidArgumentException
      * @expectedExceptionCode 1478196374
@@ -204,5 +219,35 @@ class EncoderTest extends \PHPUnit_Framework_TestCase
     {
         $encoder = new Encoder();
         $encoder->encode($value);
+    }
+
+    /**
+     * @param mixed $options
+     *
+     * @dataProvider dataNoIntegerTypes
+     *
+     * @expectedException \Crossjoin\Json\Exception\InvalidArgumentException
+     * @expectedExceptionCode 1478418109
+     * @covers ::encode
+     */
+    public function testEncodingInvalidOptions($options)
+    {
+        $encoder = new Encoder();
+        $encoder->encode('string', $options);
+    }
+
+    /**
+     * @param mixed $depth
+     *
+     * @dataProvider dataNoIntegerTypes
+     *
+     * @expectedException \Crossjoin\Json\Exception\InvalidArgumentException
+     * @expectedExceptionCode 1478418110
+     * @covers ::encode
+     */
+    public function testEncodingInvalidDepth($depth)
+    {
+        $encoder = new Encoder();
+        $encoder->encode('string', 0, $depth);
     }
 }

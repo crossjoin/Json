@@ -4,6 +4,7 @@ namespace Crossjoin\Json;
 use Crossjoin\Json\Exception\ConversionFailedException;
 use Crossjoin\Json\Exception\EncodingNotSupportedException;
 use Crossjoin\Json\Exception\InvalidArgumentException;
+use Crossjoin\Json\Exception\ParserException;
 
 /**
  * Class Decoder
@@ -81,16 +82,8 @@ class Decoder extends Converter
 
         // Get the first bytes
         // (do not use str_* function here because of possible mb_str_* overloading)
-        //preg_match('/^(.{0,8})/', $json, $matches);
-        //$bytes = array_key_exists(1, $matches) ? $matches[1] : '';
-        $bytes = '';
-        for ($i = 0; $i < 8; $i++) {
-            if (isset($json[$i])) {
-                $bytes .= $json[$i];
-            } else {
-                break;
-            }
-        }
+        preg_match('/^(.{0,8})/', $json, $matches);
+        $bytes = array_key_exists(1, $matches) ? $matches[1] : '';
 
         // Remove byte order marks
         if ($this->ignoreByteOrderMark && $bytes !== '') {
@@ -148,32 +141,62 @@ class Decoder extends Converter
      * @param int $options
      *
      * @return mixed
-     * @throws \Crossjoin\Json\Exception\InvalidArgumentException
-     * @throws \Crossjoin\Json\Exception\ExtensionRequiredException
-     * @throws \Crossjoin\Json\Exception\EncodingNotSupportedException
      * @throws \Crossjoin\Json\Exception\ConversionFailedException
+     * @throws \Crossjoin\Json\Exception\InvalidArgumentException
+     * @throws \Crossjoin\Json\Exception\EncodingNotSupportedException
+     * @throws \Crossjoin\Json\Exception\ExtensionRequiredException
      */
     public function decode($json, $assoc = false, $depth = 512, $options = 0)
     {
-        $fromEncoding = self::UTF8;
-
-        // Ignore empty string
-        // (will cause a parsing error in the native json_decode function)
-        if ($json !== '') {
-            // Get encoding (before BOM is removed, because it's also check in getEncoding())
-            $fromEncoding = $this->getEncoding($json);
-
-            // Remove byte order marks
-            if ($this->ignoreByteOrderMark) {
-                $json = $this->removeByteOrderMark($json);
-            }
+        // Check arguments
+        if (!is_string($json)) {
+            throw new InvalidArgumentException(
+                sprintf("String expected for argument '%s'. Got '%s'.", 'json', gettype($json)),
+                1478418105
+            );
+        }
+        if (!is_bool($assoc)) {
+            throw new InvalidArgumentException(
+                sprintf("Boolean expected for argument '%s'. Got '%s'.", 'assoc', gettype($assoc)),
+                1478418106
+            );
+        }
+        if (!is_int($depth)) {
+            throw new InvalidArgumentException(
+                sprintf("Integer expected for argument '%s'. Got '%s'.", 'depth', gettype($depth)),
+                1478418107
+            );
+        }
+        if (!is_int($options)) {
+            throw new InvalidArgumentException(
+                sprintf("Integer expected for argument '%s'. Got '%s'.", 'options', gettype($options)),
+                1478418108
+            );
         }
 
-        // Convert encoding to UTF-8
-        // (because PHP cannot parse UTF-16/UTF-32 encoded JSON texts)
-        if ($fromEncoding !== self::UTF8) {
-            // Replace escaped unicode characters before the conversion
-            $json = $this->convertEncoding($json, $fromEncoding, self::UTF8);
+        $fromEncoding = self::UTF8;
+        try {
+            // Ignore empty string
+            // (will cause a parsing error in the native json_decode function)
+            if ($json !== '') {
+                // Get encoding (before BOM is removed, because it's also check in getEncoding())
+                $fromEncoding = $this->getEncoding($json);
+
+                // Remove byte order marks
+                if ($this->ignoreByteOrderMark) {
+                    $json = $this->removeByteOrderMark($json);
+                }
+            }
+
+            // Convert encoding to UTF-8
+            // (because PHP cannot parse UTF-16/UTF-32 encoded JSON texts)
+            if ($fromEncoding !== self::UTF8) {
+                // Replace escaped unicode characters before the conversion
+                $json = $this->convertEncoding($json, $fromEncoding, self::UTF8);
+            }
+        } catch (ParserException $e) {
+            // Ignore exception here, so that the native json_decode function
+            // is called below and we get the same error as when calling this one.
         }
 
         // Try to decode the json text

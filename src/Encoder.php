@@ -75,6 +75,20 @@ class Encoder extends Converter
      */
     public function encode($value, $options = 0, $depth = 512)
     {
+        // Check arguments
+        if (!is_int($options)) {
+            throw new InvalidArgumentException(
+                sprintf("Integer expected for argument '%s'. Got '%s'.", 'options', gettype($options)),
+                1478418109
+            );
+        }
+        if (!is_int($depth)) {
+            throw new InvalidArgumentException(
+                sprintf("Integer expected for argument '%s'. Got '%s'.", 'depth', gettype($depth)),
+                1478418110
+            );
+        }
+
         $toEncoding = $this->getEncoding();
 
         // Try to encode the data

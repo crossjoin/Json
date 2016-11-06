@@ -17,3 +17,8 @@ Coming soon...
 
 ## Usage
 Coming soon...
+
+## Differences to the native functions
+This library handles the given argument types more strictly.
+
+For example the native json_decode() function also accepts an integer or a boolean as JSON string, which can lead to unexpected results. This library will throw an exception in this case.
