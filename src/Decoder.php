@@ -83,7 +83,7 @@ class Decoder extends Converter
 
         // Get the first bytes
         // (do not use str_* function here because of possible mb_str_* overloading)
-        preg_match('/^(.{0,8})/', $json, $matches);
+        preg_match('/^(.{0,8})/s', $json, $matches);
         $bytes = array_key_exists(1, $matches) ? $matches[1] : '';
 
         // Remove byte order marks
