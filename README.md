@@ -35,12 +35,15 @@ or by adding the following requirement to your `composer.json` file:
 ```
 
 ### Requirements
-The library has the following requirements:
-- PHP >= 5.3.3 (tested with PHP up to version 7.1.0RC5). The newer the PHP version, the better the JSON support.
-- One of the following extensions (required to support different encodings than UTF-8):
+The library supports the following PHP versions (the newer, the better the JSON support):
+- PHP >= 5.3.3
+- PHP >= 7.0.0
+- HHVM (tested with version 3.6.6)
+
+One of the following extensions is required to support different encodings than UTF-8:
   - iconv
   - mbstring
-  - intl (if PHP >= 5.5.0)
+  - intl (can only be used together with PHP >= 5.5.0)
 
 
 ## Usage
