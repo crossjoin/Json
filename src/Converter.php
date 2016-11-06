@@ -4,6 +4,7 @@ namespace Crossjoin\Json;
 use Crossjoin\Json\Exception\ConversionFailedException;
 use Crossjoin\Json\Exception\ExtensionRequiredException;
 use Crossjoin\Json\Exception\InvalidArgumentException;
+use Crossjoin\Json\Exception\NativeJsonErrorException;
 
 /**
  * Class Converter
@@ -106,5 +107,17 @@ abstract class Converter
             '',
             $string
         );
+    }
+
+    /**
+     * @return NativeJsonErrorException
+     */
+    protected function getNativeJsonErrorException()
+    {
+        if (function_exists('\json_last_error_msg')) {
+            return new NativeJsonErrorException(\json_last_error_msg(), \json_last_error());
+        } else {
+            return new NativeJsonErrorException('An error occurred while encoding/decoding JSON.', \json_last_error());
+        }
     }
 }

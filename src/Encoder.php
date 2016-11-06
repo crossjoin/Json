@@ -1,10 +1,8 @@
 <?php
 namespace Crossjoin\Json;
 
-use Crossjoin\Json\Exception\ConversionFailedException;
 use Crossjoin\Json\Exception\EncodingNotSupportedException;
 use Crossjoin\Json\Exception\InvalidArgumentException;
-use Crossjoin\Json\Exception\NativeJsonErrorException;
 
 /**
  * Class Encoder
@@ -109,11 +107,7 @@ class Encoder extends Converter
         // @codeCoverageIgnoreEnd
 
         if ($json === false) {
-            if (function_exists('\json_last_error_msg')) {
-                throw new NativeJsonErrorException(\json_last_error_msg(), \json_last_error());
-            } else {
-                throw new NativeJsonErrorException('An error occurred while encoding JSON.', \json_last_error());
-            }
+            throw $this->getNativeJsonErrorException();
         }
 
         // Convert

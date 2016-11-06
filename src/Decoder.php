@@ -1,11 +1,9 @@
 <?php
 namespace Crossjoin\Json;
 
-use Crossjoin\Json\Exception\ConversionFailedException;
 use Crossjoin\Json\Exception\EncodingNotSupportedException;
 use Crossjoin\Json\Exception\InvalidArgumentException;
 use Crossjoin\Json\Exception\JsonException;
-use Crossjoin\Json\Exception\NativeJsonErrorException;
 
 /**
  * Class Decoder
@@ -211,11 +209,7 @@ class Decoder extends Converter
         // @codeCoverageIgnoreEnd
 
         if (\json_last_error() !== \JSON_ERROR_NONE) {
-            if (function_exists('\json_last_error_msg')) {
-                throw new NativeJsonErrorException(\json_last_error_msg(), \json_last_error());
-            } else {
-                throw new NativeJsonErrorException('An error occurred while decoding JSON.', \json_last_error());
-            }
+            throw $this->getNativeJsonErrorException();
         }
 
         return $data;
