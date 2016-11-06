@@ -1,19 +1,24 @@
 {
   "name": "crossjoin/json",
   "type": "library",
-  "description": "",
+  "description": "JSON decoder and encoder for PHP with full Unicode support following RFC 7159. Besides UTF-8 it also supports JSON in UTF-16BE, UTF-16LE, UTF-32BE and UTF-32LE encoding. And, as suggested by the RFC for better interoperability, it can also ignore byte order marks (BOMs) when parsing JSON.",
   "keywords": [
-    "php",
-    "json",
+    "PHP",
+    "JSON",
     "json_encode",
     "json_decode",
+    "json_last_error",
+    "json_last_error_msg",
     "UTF-8",
     "UTF-16",
     "UTF-16BE",
     "UTF-16LE",
     "UTF-32",
     "UTF-32BE",
-    "UTF-32LE"
+    "UTF-32LE",
+    "Unicode",
+    "RFC7159",
+    "RFC 7159"
   ],
   "homepage": "https://github.com/crossjoin/Json",
   "license": "MIT",
@@ -37,9 +42,9 @@
     "ext-iconv": "*"
   },
   "suggest": {
-    "ext-iconv": "To support JSON in other encodings than UTF-8, either the iconv, intl or mbstring extension is required.",
-    "ext-intl" : "To support JSON in other encodings than UTF-8, either the iconv, intl or mbstring extension is required.",
-    "ext-mbstring" : "To support JSON in other encodings than UTF-8, either the iconv, intl or mbstring extension is required."
+    "ext-iconv": "To support JSON in other encodings than UTF-8, either the iconv, intl (if PHP >= 5.5.0) or mbstring extension is required.",
+    "ext-intl" : "To support JSON in other encodings than UTF-8, either the iconv, intl (if PHP >= 5.5.0) or mbstring extension is required.",
+    "ext-mbstring" : "To support JSON in other encodings than UTF-8, either the iconv, intl (if PHP >= 5.5.0) or mbstring extension is required."
   },
   "autoload": {
     "files": [
@@ -55,7 +60,7 @@
       "Crossjoin\\Json\\Tests\\Mock\\": "tests/mock/"
     }
   },
-  "bin": [
-    "scripts/browscap"
-  ]
+  "archive": {
+    "exclude": ["/examples"]
+  }
 }
