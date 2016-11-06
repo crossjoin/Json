@@ -1,4 +1,12 @@
 # JSON decoder and encoder
+[![Author](http://img.shields.io/badge/author-@cziegenberg-blue.svg?style=flat-square)](https://twitter.com/cziegenberg)
+[![Quality Score](https://img.shields.io/scrutinizer/g/crossjoin/Json/master.svg?style=flat-square)](https://scrutinizer-ci.com/g/crossjoin/Json)
+[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
+[![Packagist Version](https://img.shields.io/packagist/v/crossjoin/Json.svg?style=flat-square)](https://packagist.org/packages/crossjoin/Json)
+[![Total Downloads](https://img.shields.io/packagist/dt/crossjoin/Json.svg?style=flat-square)](https://packagist.org/packages/crossjoin/Json)
+[![Build](https://img.shields.io/travis/crossjoin/Browscap/master.svg)](https://travis-ci.org/crossjoin/Browscap)
+
+## Introduction
 This library provides a JSON decoder and encoder for PHP, based on the native PHP `json_*` functions, but **with full Unicode support**, following [RFC 7159](https://tools.ietf.org/html/rfc7159). 
 
 The native PHP functions only support JSON string that are encoded in UTF-8 and that do not contain a byte order mark (BOM).
@@ -237,3 +245,12 @@ For example the native json_decode() function also accepts an integer or a boole
 
 ### Arguments added in later PHP versions
 The arguments of the native PHP functions `json_decode` and `json_encode` differ between PHP versions. Older PHP versions do not support all arguments. When using the replacement functions `\Crossjoin\Json\json_decode` and `\Crossjoin\Json\json_encode`, these arguments may be set, but they are only used if the native PHP version supports them.
+
+### Error messages in PHP < 5.5.0
+The function `\Crossjoin\Json\json_last_error_msg()` returns the original error message, as returned by the native PHP function `json_last_error_msg()` - except for PHP < 5.5.0, because this function does not exist in these versions. In this case a default error message is returned instead.
+
+### Different results for PHP < 5.5.0
+When you try to encode an invalid type in PHP < 5.5.0, for example a resource, the native PHP function `json_encode()` returns an encoded null value and triggers an error.
+
+This behavior has been adjusted to the behavior of PHP 5.5.0, so that this case is handled as an error, resulting in an `\Crossjoin\Json\Exception\InvalidArgumentException` exception. This error cannot be handled with `json_last_error()`, as the error code \JSON_ERROR_UNSUPPORTED_TYPE does not exist before PHP 5.5.0.
+
