@@ -11,7 +11,6 @@ require __DIR__ . '/../vendor/autoload.php';
 // Note: If an invalid type is used for one of the arguments, a
 // \Crossjoin\Json\Exception\InvalidArgumentException exception is thrown,
 // while the native PHP function may accept some of them.
-//
 $data = \Crossjoin\Json\json_decode('{"key":"value"}');
 //$data = json_decode('{"key":"value"}', false,);
 //$data = json_decode('{"key":"value"}', false, 512);
