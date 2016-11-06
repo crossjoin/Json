@@ -25,15 +25,19 @@ class DecoderTest extends \PHPUnit_Framework_TestCase
         $options[] = \JSON_HEX_APOS;
         $options[] = \JSON_NUMERIC_CHECK;
         $options[] = \JSON_FORCE_OBJECT;
-        if (version_compare(PHP_VERSION, '5.4.0', '>=')) {
+        if (defined('\JSON_PRETTY_PRINT')) {
             $options[] = \JSON_PRETTY_PRINT;
+        }
+        if (defined('\JSON_UNESCAPED_SLASHES')) {
             $options[] = \JSON_UNESCAPED_SLASHES;
+        }
+        if (defined('\JSON_UNESCAPED_UNICODE')) {
             $options[] = \JSON_UNESCAPED_UNICODE;
         }
-        if (version_compare(PHP_VERSION, '5.5.0', '>=')) {
+        if (defined('\JSON_PARTIAL_OUTPUT_ON_ERROR')) {
             $options[] = \JSON_PARTIAL_OUTPUT_ON_ERROR;
         }
-        if (version_compare(PHP_VERSION, '5.6.6', '>=')) {
+        if (defined('\JSON_PRESERVE_ZERO_FRACTION')) {
             $options[] = \JSON_PRESERVE_ZERO_FRACTION;
         }
 
