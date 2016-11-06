@@ -180,12 +180,16 @@ class DecoderTest extends \PHPUnit_Framework_TestCase
      */
     public function dataInvalidJson()
     {
-        return array(
-            array(''),
-            array('{]'),
-            array('"?\udc4d"'),
-            array('"\ud83d?"'),
-        );
+        $data = array(array('{]'));
+
+        // The following examples are now handled as invalid in PHP < 7.0.0
+        if (version_compare(PHP_VERSION, '7.0.0', '>=')) {
+            $data[] = array('');
+            $data[] = array('"?\udc4d"');
+            $data[] = array('"\ud83d?"');
+        }
+
+        return $data;
     }
 
     /**
