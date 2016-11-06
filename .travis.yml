@@ -6,6 +6,7 @@ php:
   - '5.6'
   - '7.0'
   - nightly
+  - hhvm
 before_script:
   - composer install --prefer-source
   - cp phpunit.xml.dist phpunit.xml
