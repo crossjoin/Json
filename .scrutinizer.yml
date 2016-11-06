@@ -1,6 +1,11 @@
 filter:
     excluded_paths:
         - 'tests/*'
+        - 'examples/*'
+checks:
+    php:
+        code_rating: true
+        duplication: true
 build:
     environment:
         php:
