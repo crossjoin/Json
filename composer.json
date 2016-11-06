@@ -34,12 +34,14 @@
     "source": "https://github.com/crossjoin/Json"
   },
   "require": {
-    "php": "^5.3.3 || ^7.0"
+    "php": "^5.3.3 || ^7.0",
+    "ext-json": "*"
   },
   "require-dev": {
     "php": "^5.3.3 || ^7.0",
     "phpunit/phpunit" : "^4.8.23",
-    "ext-iconv": "*"
+    "ext-iconv": "*",
+    "ext-json": "*"
   },
   "suggest": {
     "ext-iconv": "To support JSON in other encodings than UTF-8, either the iconv, intl (if PHP >= 5.5.0) or mbstring extension is required.",
