@@ -15,6 +15,9 @@ class FunctionsTest extends \PHPUnit_Framework_TestCase
         static::assertEquals('[]', $result);
     }
 
+    /**
+     * @requires PHP 5.5
+     */
     public function testInvalidJsonEncode()
     {
         $result = \Crossjoin\Json\json_encode(fopen('php://memory', 'r'));

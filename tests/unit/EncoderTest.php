@@ -214,6 +214,7 @@ class EncoderTest extends \PHPUnit_Framework_TestCase
      *
      * @expectedException \Crossjoin\Json\Exception\NativeJsonErrorException
      * @covers ::encode
+     * @requires PHP 5.5
      */
     public function testEncodingInvalidData($value)
     {
