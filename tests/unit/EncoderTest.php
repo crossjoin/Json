@@ -212,7 +212,7 @@ class EncoderTest extends \PHPUnit_Framework_TestCase
      *
      * @dataProvider dataEncodingInvalidData
      *
-     * @expectedException \Crossjoin\Json\Exception\ConversionFailedException
+     * @expectedException \Crossjoin\Json\Exception\NativeJsonErrorException
      * @covers ::encode
      */
     public function testEncodingInvalidData($value)

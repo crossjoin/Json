@@ -290,7 +290,7 @@ class DecoderTest extends \PHPUnit_Framework_TestCase
      *
      * @dataProvider dataInvalidJson
      *
-     * @expectedException \Crossjoin\Json\Exception\ConversionFailedException
+     * @expectedException \Crossjoin\Json\Exception\NativeJsonErrorException
      * @covers ::decode
      */
     public function testDecodeInvalidJson($json)

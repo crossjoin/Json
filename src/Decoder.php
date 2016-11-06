@@ -5,6 +5,7 @@ use Crossjoin\Json\Exception\ConversionFailedException;
 use Crossjoin\Json\Exception\EncodingNotSupportedException;
 use Crossjoin\Json\Exception\InvalidArgumentException;
 use Crossjoin\Json\Exception\JsonException;
+use Crossjoin\Json\Exception\NativeJsonErrorException;
 
 /**
  * Class Decoder
@@ -141,6 +142,7 @@ class Decoder extends Converter
      * @param int $options
      *
      * @return mixed
+     * @throws \Crossjoin\Json\Exception\NativeJsonErrorException
      * @throws \Crossjoin\Json\Exception\ConversionFailedException
      * @throws \Crossjoin\Json\Exception\InvalidArgumentException
      * @throws \Crossjoin\Json\Exception\EncodingNotSupportedException
@@ -209,7 +211,7 @@ class Decoder extends Converter
         // @codeCoverageIgnoreEnd
 
         if (json_last_error() !== \JSON_ERROR_NONE) {
-            throw new ConversionFailedException(json_last_error_msg(), json_last_error());
+            throw new NativeJsonErrorException(json_last_error_msg(), json_last_error());
         }
 
         return $data;

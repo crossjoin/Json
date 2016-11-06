@@ -4,6 +4,7 @@ namespace Crossjoin\Json;
 use Crossjoin\Json\Exception\ConversionFailedException;
 use Crossjoin\Json\Exception\EncodingNotSupportedException;
 use Crossjoin\Json\Exception\InvalidArgumentException;
+use Crossjoin\Json\Exception\NativeJsonErrorException;
 
 /**
  * Class Encoder
@@ -69,6 +70,7 @@ class Encoder extends Converter
      * @param int $depth
      *
      * @return string
+     * @throws \Crossjoin\Json\Exception\NativeJsonErrorException
      * @throws \Crossjoin\Json\Exception\InvalidArgumentException
      * @throws \Crossjoin\Json\Exception\ExtensionRequiredException
      * @throws \Crossjoin\Json\Exception\ConversionFailedException
@@ -101,7 +103,7 @@ class Encoder extends Converter
         // @codeCoverageIgnoreEnd
 
         if ($json === false) {
-            throw new ConversionFailedException(json_last_error_msg(), json_last_error());
+            throw new NativeJsonErrorException(json_last_error_msg(), json_last_error());
         }
 
         // Convert
