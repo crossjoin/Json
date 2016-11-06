@@ -2,7 +2,7 @@
 namespace Crossjoin\Json;
 
 use Crossjoin\Json\Exception\InvalidArgumentException;
-use Crossjoin\Json\Exception\ParserException;
+use Crossjoin\Json\Exception\JsonException;
 
 /**
  * Returns the JSON representation of a value, encoded in UTF-8
@@ -25,7 +25,7 @@ function json_encode($value, $options = 0, $depth = 512)
         return $encoder->encode($value, $options, $depth);
     } catch (InvalidArgumentException $e) {
         throw $e;
-    } catch (ParserException $e) {
+    } catch (JsonException $e) {
         return false;
     }
 }
@@ -53,7 +53,7 @@ function json_decode($json, $assoc = false, $depth = 512, $options = 0)
         return $decoder->decode($json, $assoc, $depth, $options);
     } catch (InvalidArgumentException $e) {
         throw $e;
-    } catch (ParserException $e) {
+    } catch (JsonException $e) {
         return null;
     }
 }

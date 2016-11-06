@@ -7,6 +7,6 @@ namespace Crossjoin\Json\Exception;
  * @package Crossjoin\Json\Exception
  * @author Christoph Ziegenberg <ziegenberg@crossjoin.com>
  */
-class InvalidArgumentException extends \InvalidArgumentException implements ParserException
+class InvalidArgumentException extends \InvalidArgumentException implements JsonException
 {
 }

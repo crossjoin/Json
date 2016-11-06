@@ -2,11 +2,11 @@
 namespace Crossjoin\Json\Exception;
 
 /**
- * Interface ParserException
+ * Interface JsonException
  *
  * @package Crossjoin\Json\Exception
  * @author Christoph Ziegenberg <ziegenberg@crossjoin.com>
  */
-interface ParserException
+interface JsonException
 {
 }

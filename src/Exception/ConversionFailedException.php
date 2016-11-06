@@ -7,6 +7,6 @@ namespace Crossjoin\Json\Exception;
  * @package Crossjoin\Json\Exception
  * @author Christoph Ziegenberg <ziegenberg@crossjoin.com>
  */
-class ConversionFailedException extends \RuntimeException implements ParserException
+class ConversionFailedException extends \RuntimeException implements JsonException
 {
 }

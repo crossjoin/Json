@@ -4,7 +4,7 @@ namespace Crossjoin\Json;
 use Crossjoin\Json\Exception\ConversionFailedException;
 use Crossjoin\Json\Exception\EncodingNotSupportedException;
 use Crossjoin\Json\Exception\InvalidArgumentException;
-use Crossjoin\Json\Exception\ParserException;
+use Crossjoin\Json\Exception\JsonException;
 
 /**
  * Class Decoder
@@ -194,7 +194,7 @@ class Decoder extends Converter
                 // Replace escaped unicode characters before the conversion
                 $json = $this->convertEncoding($json, $fromEncoding, self::UTF8);
             }
-        } catch (ParserException $e) {
+        } catch (JsonException $e) {
             // Ignore exception here, so that the native json_decode function
             // is called below and we get the same error as when calling this one.
         }
