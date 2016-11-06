@@ -1,6 +1,7 @@
 <?php
 namespace Crossjoin\Json;
 
+use Crossjoin\Json\Exception\InvalidArgumentException;
 use Crossjoin\Json\Exception\ParserException;
 
 /**
@@ -15,12 +16,15 @@ use Crossjoin\Json\Exception\ParserException;
  * @link http://php.net/manual/en/function.json-encode.php
  *
  * @return string|false
+ * @throws \Crossjoin\Json\Exception\InvalidArgumentException
  */
 function json_encode($value, $options = 0, $depth = 512)
 {
     $encoder = new Encoder();
     try {
         return $encoder->encode($value, $options, $depth);
+    } catch (InvalidArgumentException $e) {
+        throw $e;
     } catch (ParserException $e) {
         return false;
     }
@@ -40,12 +44,15 @@ function json_encode($value, $options = 0, $depth = 512)
  * @link http://php.net/manual/en/function.json-decode.php
  *
  * @return mixed
+ * @throws \Crossjoin\Json\Exception\InvalidArgumentException
  */
 function json_decode($json, $assoc = false, $depth = 512, $options = 0)
 {
     $decoder = new Decoder();
     try {
         return $decoder->decode($json, $assoc, $depth, $options);
+    } catch (InvalidArgumentException $e) {
+        throw $e;
     } catch (ParserException $e) {
         return null;
     }
