@@ -98,12 +98,22 @@ class Encoder extends Converter
         if (version_compare(PHP_VERSION, '5.5.0', '>=')) {
             $json = \json_encode($value, $options, $depth);
         } else {
-            $json = \json_encode($value, $options);
+            // Although the json_last_error() function exists, json_encode() in PHP < 5.5.0 sometimes
+            // triggers an error, for example when an unsupported type is tried to be encoded. We
+            // suppress these errors and throw an own exception instead.
+            $json = @\json_encode($value, $options);
+            if ($value !== null && $json === 'null') {
+                throw new InvalidArgumentException('The type tried to encode is not supported.', 1478445896);
+            }
         }
         // @codeCoverageIgnoreEnd
 
         if ($json === false) {
-            throw new NativeJsonErrorException(json_last_error_msg(), json_last_error());
+            if (function_exists('\json_last_error_msg')) {
+                throw new NativeJsonErrorException(\json_last_error_msg(), \json_last_error());
+            } else {
+                throw new NativeJsonErrorException('An error occurred while encoding JSON.', \json_last_error());
+            }
         }
 
         // Convert
