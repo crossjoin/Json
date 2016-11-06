@@ -76,8 +76,11 @@ function json_last_error () {
  * For details about the return values see the native json_last_error_msg() function
  * @link http://php.net/manual/en/function.json-last-error-msg.php
  *
- * @return string|null
+ * @return string|false
  */
 function json_last_error_msg ()  {
-    return \json_last_error_msg();
+    if (function_exists('\json_last_error_msg')) {
+        return \json_last_error_msg();
+    }
+    return 'An error occurred while encoding or decoding JSON.';
 }
