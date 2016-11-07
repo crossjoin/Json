@@ -9,7 +9,7 @@
 ## Introduction
 This library provides a JSON decoder and encoder for PHP, based on the native PHP `json_*` functions, but **with full Unicode support**, following [RFC 7159](https://tools.ietf.org/html/rfc7159). 
 
-The native PHP functions only support JSON string that are encoded in UTF-8 and that do not contain a byte order mark (BOM).
+The native PHP functions only support JSON strings that are encoded in UTF-8 and that do not contain a byte order mark (BOM).
 
 This library wraps the PHP functions and enables you to decode and encode JSON files with the following additional encodings that are allowed by the RFC:
 - UTF-16BE
@@ -70,9 +70,9 @@ A basic example using the provided functions in the `Crossjoin\Json` namespace:
 // \Crossjoin\Json\Exception\InvalidArgumentException exception is thrown,
 // while the native PHP function may accept some of them.
 $data = \Crossjoin\Json\json_decode('{"key":"value"}');
-//$data = json_decode('{"key":"value"}', false,);
-//$data = json_decode('{"key":"value"}', false, 512);
-//$data = json_decode('{"key":"value"}', false, 512, \JSON_BIGINT_AS_STRING);
+//$data = \Crossjoin\Json\json_decode('{"key":"value"}', false,);
+//$data = \Crossjoin\Json\json_decode('{"key":"value"}', false, 512);
+//$data = \Crossjoin\Json\json_decode('{"key":"value"}', false, 512, \JSON_BIGINT_AS_STRING);
 
 // Also the functions json_last_error() and json_last_error_msg() can be used
 if (\Crossjoin\Json\json_last_error() !== \JSON_ERROR_NONE) {
@@ -163,8 +163,8 @@ A basic example using the provided functions in the `Crossjoin\Json` namespace:
 // \Crossjoin\Json\Exception\InvalidArgumentException exception is thrown,
 // while the native PHP function may accept some of them.
 $json = \Crossjoin\Json\json_encode(123);
-//$json = json_encode(123, \JSON_NUMERIC_CHECK);
-//$json = json_encode(123, \JSON_NUMERIC_CHECK, 512);
+//$json = \Crossjoin\Json\json_encode(123, \JSON_NUMERIC_CHECK);
+//$json = \Crossjoin\Json\json_encode(123, \JSON_NUMERIC_CHECK, 512);
 
 // Also the functions json_last_error() and json_last_error_msg() can be used
 if (\Crossjoin\Json\json_last_error() !== \JSON_ERROR_NONE) {

@@ -12,8 +12,8 @@ require __DIR__ . '/../vendor/autoload.php';
 // \Crossjoin\Json\Exception\InvalidArgumentException exception is thrown,
 // while the native PHP function may accept some of them.
 $json = \Crossjoin\Json\json_encode(123);
-//$json = json_encode(123, \JSON_NUMERIC_CHECK);
-//$json = json_encode(123, \JSON_NUMERIC_CHECK, 512);
+//$json = \Crossjoin\Json\json_encode(123, \JSON_NUMERIC_CHECK);
+//$json = \Crossjoin\Json\json_encode(123, \JSON_NUMERIC_CHECK, 512);
 
 // Also the functions json_last_error() and json_last_error_msg() can be used
 if (\Crossjoin\Json\json_last_error() !== \JSON_ERROR_NONE) {

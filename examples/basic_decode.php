@@ -12,9 +12,9 @@ require __DIR__ . '/../vendor/autoload.php';
 // \Crossjoin\Json\Exception\InvalidArgumentException exception is thrown,
 // while the native PHP function may accept some of them.
 $data = \Crossjoin\Json\json_decode('{"key":"value"}');
-//$data = json_decode('{"key":"value"}', false,);
-//$data = json_decode('{"key":"value"}', false, 512);
-//$data = json_decode('{"key":"value"}', false, 512, \JSON_BIGINT_AS_STRING);
+//$data = \Crossjoin\Json\json_decode('{"key":"value"}', false,);
+//$data = \Crossjoin\Json\json_decode('{"key":"value"}', false, 512);
+//$data = \Crossjoin\Json\json_decode('{"key":"value"}', false, 512, \JSON_BIGINT_AS_STRING);
 
 // Also the functions json_last_error() and json_last_error_msg() can be used
 if (\Crossjoin\Json\json_last_error() !== \JSON_ERROR_NONE) {
