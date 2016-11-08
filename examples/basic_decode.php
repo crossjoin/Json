@@ -4,7 +4,7 @@ require __DIR__ . '/../vendor/autoload.php';
 // From PHP 5.6.0 you can also use namespaced functions to avoid the namespace
 // prefixes below.
 //use function \Crossjoin\Json\json_decode, \Crossjoin\Json\json_encode;
-//use function \Crossjoin\Json\json_last_error, \Crossjoin\Json\json_last_error_msg
+//use function \Crossjoin\Json\json_last_error, \Crossjoin\Json\json_last_error_msg;
 
 // Decode example (same arguments as the native PHP function).
 //

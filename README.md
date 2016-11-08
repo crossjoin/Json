@@ -62,7 +62,7 @@ A basic example using the provided functions in the `Crossjoin\Json` namespace:
 // From PHP 5.6.0 you can also use namespaced functions to avoid the namespace
 // prefixes below.
 //use function \Crossjoin\Json\json_decode, \Crossjoin\Json\json_encode;
-//use function \Crossjoin\Json\json_last_error, \Crossjoin\Json\json_last_error_msg
+//use function \Crossjoin\Json\json_last_error, \Crossjoin\Json\json_last_error_msg;
 
 // Decode example (same arguments as the native PHP function).
 //
@@ -155,7 +155,7 @@ A basic example using the provided functions in the `Crossjoin\Json` namespace:
 // From PHP 5.6.0 you can also use namespaced functions to avoid the namespace
 // prefixes below.
 //use function \Crossjoin\Json\json_decode, \Crossjoin\Json\json_encode;
-//use function \Crossjoin\Json\json_last_error, \Crossjoin\Json\json_last_error_msg
+//use function \Crossjoin\Json\json_last_error, \Crossjoin\Json\json_last_error_msg;
 
 // Encode example (same arguments as the native PHP function)
 //
