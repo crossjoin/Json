@@ -55,10 +55,7 @@ class Encoder extends Converter
                 throw new EncodingNotSupportedException(sprintf("Unsupported encoding '%s'.", $encoding), 1478101930);
             }
         } else {
-            throw new InvalidArgumentException(
-                sprintf("String expected for argument '%s'. Got '%s'.", 'encoding', gettype($encoding)),
-                1478196374
-            );
+            throw InvalidArgumentException::getInstance('string', 'encoding', $encoding, 1478196374);
         }
     }
 
@@ -77,16 +74,10 @@ class Encoder extends Converter
     {
         // Check arguments
         if (!is_int($options)) {
-            throw new InvalidArgumentException(
-                sprintf("Integer expected for argument '%s'. Got '%s'.", 'options', gettype($options)),
-                1478418109
-            );
+            throw InvalidArgumentException::getInstance('integer', 'options', $options, 1478418109);
         }
         if (!is_int($depth)) {
-            throw new InvalidArgumentException(
-                sprintf("Integer expected for argument '%s'. Got '%s'.", 'depth', gettype($depth)),
-                1478418110
-            );
+            throw InvalidArgumentException::getInstance('integer', 'depth', $depth, 1478418110);
         }
 
         $toEncoding = $this->getEncoding();

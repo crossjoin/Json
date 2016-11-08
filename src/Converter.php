@@ -34,22 +34,13 @@ abstract class Converter
     {
         // Check arguments
         if (!is_string($string)) {
-            throw new InvalidArgumentException(
-                sprintf("String expected for argument '%s'. Got '%s'.", 'json', gettype($string)),
-                1478195990
-            );
+            throw InvalidArgumentException::getInstance('string', 'json', $string, 1478195990);
         }
         if (!is_string($fromEncoding)) {
-            throw new InvalidArgumentException(
-                sprintf("String expected for argument '%s'. Got '%s'.", 'fromEncoding', gettype($fromEncoding)),
-                1478195991
-            );
+            throw InvalidArgumentException::getInstance('string', 'fromEncoding', $fromEncoding, 1478195991);
         }
         if (!is_string($toEncoding)) {
-            throw new InvalidArgumentException(
-                sprintf("String expected for argument '%s'. Got '%s'.", 'toEncoding', gettype($toEncoding)),
-                1478195992
-            );
+            throw InvalidArgumentException::getInstance('string', 'toEncoding', $toEncoding, 1478195992);
         }
 
         // Try different conversion functions, ordered by speed
@@ -90,10 +81,7 @@ abstract class Converter
     {
         // Check arguments
         if (!is_string($string)) {
-            throw new InvalidArgumentException(
-                sprintf("String expected for argument '%s'. Got '%s'.", 'string', gettype($string)),
-                1478195910
-            );
+            throw InvalidArgumentException::getInstance('string', 'string', $string, 1478195910);
         }
 
         return (string)preg_replace(

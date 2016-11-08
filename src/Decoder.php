@@ -49,12 +49,10 @@ class Decoder extends Converter
         if (is_bool($ignoreByteOrderMark)) {
             $this->ignoreByteOrderMark = $ignoreByteOrderMark;
         } else {
-            throw new InvalidArgumentException(
-                sprintf(
-                    "Boolean expected for argument '%s'. Got '%s'.",
-                    'ignoreByteOrderMark',
-                    gettype($ignoreByteOrderMark)
-                ),
+            throw InvalidArgumentException::getInstance(
+                'boolean',
+                'ignoreByteOrderMark',
+                $ignoreByteOrderMark,
                 1478195542
             );
         }
@@ -73,10 +71,7 @@ class Decoder extends Converter
     {
         // Check arguments
         if (!is_string($json)) {
-            throw new InvalidArgumentException(
-                sprintf("String expected for argument '%s'. Got '%s'.", 'json', gettype($json)),
-                1478195652
-            );
+            throw InvalidArgumentException::getInstance('string', 'json', $json, 1478195652);
         }
 
         // Get the first bytes
@@ -150,28 +145,16 @@ class Decoder extends Converter
     {
         // Check arguments
         if (!is_string($json)) {
-            throw new InvalidArgumentException(
-                sprintf("String expected for argument '%s'. Got '%s'.", 'json', gettype($json)),
-                1478418105
-            );
+            throw InvalidArgumentException::getInstance('string', 'json', $json, 1478418105);
         }
         if (!is_bool($assoc)) {
-            throw new InvalidArgumentException(
-                sprintf("Boolean expected for argument '%s'. Got '%s'.", 'assoc', gettype($assoc)),
-                1478418106
-            );
+            throw InvalidArgumentException::getInstance('boolean', 'assoc', $assoc, 1478418106);
         }
         if (!is_int($depth)) {
-            throw new InvalidArgumentException(
-                sprintf("Integer expected for argument '%s'. Got '%s'.", 'depth', gettype($depth)),
-                1478418107
-            );
+            throw InvalidArgumentException::getInstance('integer', 'depth', $assoc, 1478418107);
         }
         if (!is_int($options)) {
-            throw new InvalidArgumentException(
-                sprintf("Integer expected for argument '%s'. Got '%s'.", 'options', gettype($options)),
-                1478418108
-            );
+            throw InvalidArgumentException::getInstance('integer', 'options', $options, 1478418108);
         }
 
         $fromEncoding = self::UTF8;
