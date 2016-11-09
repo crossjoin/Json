@@ -79,8 +79,6 @@ class Encoder extends Converter
             throw InvalidArgumentException::getInstance('integer', 'depth', $depth, 1478418110);
         }
 
-        $toEncoding = $this->getEncoding();
-
         // Try to encode the data
         // @codeCoverageIgnoreStart
         if (version_compare(PHP_VERSION, '5.5.0', '>=')) {
@@ -91,11 +89,7 @@ class Encoder extends Converter
         // @codeCoverageIgnoreEnd
 
         // Convert
-        if ($toEncoding !== self::UTF8) {
-            $json = $this->convertEncoding($json, self::UTF8, $toEncoding);
-        }
-
-        return $json;
+        return $this->convertEncoding($json, self::UTF8, $this->getEncoding());
     }
 
     /**

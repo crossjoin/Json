@@ -139,14 +139,11 @@ class Decoder extends Converter
         // Check arguments
         if (!is_string($json)) {
             throw InvalidArgumentException::getInstance('string', 'json', $json, 1478418105);
-        }
-        if (!is_bool($assoc)) {
+        } elseif (!is_bool($assoc)) {
             throw InvalidArgumentException::getInstance('boolean', 'assoc', $assoc, 1478418106);
-        }
-        if (!is_int($depth)) {
+        } elseif (!is_int($depth)) {
             throw InvalidArgumentException::getInstance('integer', 'depth', $assoc, 1478418107);
-        }
-        if (!is_int($options)) {
+        } elseif (!is_int($options)) {
             throw InvalidArgumentException::getInstance('integer', 'options', $options, 1478418108);
         }
 
@@ -156,11 +153,45 @@ class Decoder extends Converter
         // Try to decode the json text
         // @codeCoverageIgnoreStart
         if (version_compare(PHP_VERSION, '5.4.0', '>=')) {
-            $data = \json_decode($json, $assoc, $depth, $options);
+            return $this->decodePhpGte54($json, $assoc, $depth, $options);
         } else {
-            $data = \json_decode($json, $assoc, $depth);
+            return $this->decodePhpLt54($json, $assoc, $depth);
         }
         // @codeCoverageIgnoreEnd
+    }
+
+    /** @noinspection MoreThanThreeArgumentsInspection */
+    /**
+     * @param string $json
+     * @param bool $assoc
+     * @param int $depth
+     * @param int $options
+     *
+     * @return mixed
+     * @throws \Crossjoin\Json\Exception\NativeJsonErrorException
+     */
+    private function decodePhpGte54($json, $assoc, $depth, $options)
+    {
+        $data = \json_decode($json, $assoc, $depth, $options);
+
+        if (\json_last_error() !== \JSON_ERROR_NONE) {
+            throw $this->getNativeJsonErrorException();
+        }
+
+        return $data;
+    }
+
+    /**
+     * @param string $json
+     * @param bool $assoc
+     * @param int $depth
+     *
+     * @return mixed
+     * @throws \Crossjoin\Json\Exception\NativeJsonErrorException
+     */
+    private function decodePhpLt54($json, $assoc, $depth)
+    {
+        $data = \json_decode($json, $assoc, $depth);
 
         if (\json_last_error() !== \JSON_ERROR_NONE) {
             throw $this->getNativeJsonErrorException();
@@ -200,20 +231,13 @@ class Decoder extends Converter
             // Ignore empty string
             // (will cause a parsing error in the native json_decode function)
             if ($json !== '') {
-                // Get encoding (before BOM is removed, because it's also check in getEncoding())
-                $fromEncoding = $this->getEncoding($json);
-
                 // Remove byte order marks
                 if ($this->ignoreByteOrderMark) {
                     $json = $this->removeByteOrderMark($json);
                 }
 
                 // Convert encoding to UTF-8
-                // (because PHP cannot parse UTF-16/UTF-32 encoded JSON texts)
-                if ($fromEncoding !== self::UTF8) {
-                    // Replace escaped unicode characters before the conversion
-                    $json = $this->convertEncoding($json, $fromEncoding, self::UTF8);
-                }
+                $json = $this->convertEncoding($json, $this->getEncoding($json), self::UTF8);
             }
         } catch (JsonException $e) {
             // Ignore exception here, so that the native json_decode function

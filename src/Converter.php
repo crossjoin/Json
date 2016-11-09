@@ -41,6 +41,24 @@ abstract class Converter
             throw InvalidArgumentException::getInstance('string', 'toEncoding', $toEncoding, 1478195992);
         }
 
+        if ($fromEncoding === $toEncoding) {
+            return $string;
+        }
+
+        return $this->tryConvertEncoding($string, $fromEncoding, $toEncoding);
+    }
+
+    /**
+     * @param $string
+     * @param $fromEncoding
+     * @param $toEncoding
+     *
+     * @return string
+     * @throws \Crossjoin\Json\Exception\ExtensionRequiredException
+     * @throws \Crossjoin\Json\Exception\ConversionFailedException
+     */
+    private function tryConvertEncoding($string, $fromEncoding, $toEncoding)
+    {
         // Try different conversion functions, ordered by speed
         if (($converted = $this->convertWithIconv($string, $fromEncoding, $toEncoding)) !== null) {
             return $converted;
