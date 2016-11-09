@@ -35,27 +35,26 @@ abstract class Converter
         // Check arguments
         if (!is_string($string)) {
             throw InvalidArgumentException::getInstance('string', 'json', $string, 1478195990);
-        }
-        if (!is_string($fromEncoding)) {
+        } elseif (!is_string($fromEncoding)) {
             throw InvalidArgumentException::getInstance('string', 'fromEncoding', $fromEncoding, 1478195991);
-        }
-        if (!is_string($toEncoding)) {
+        } elseif (!is_string($toEncoding)) {
             throw InvalidArgumentException::getInstance('string', 'toEncoding', $toEncoding, 1478195992);
         }
 
         // Try different conversion functions, ordered by speed
-        if (
-            ($convertedString = $this->convertWithIconv($string, $fromEncoding, $toEncoding)) === null &&
-            ($convertedString = $this->convertWithUConverter($string, $fromEncoding, $toEncoding)) === null &&
-            ($convertedString = $this->convertWithMultiByteString($string, $fromEncoding, $toEncoding)) === null
-        ) {
-            throw new ExtensionRequiredException(
-                "The 'iconv', 'intl' or the 'mbstring' extension is required to convert the JSON encoding.",
-                1478095252
-            );
+        if (($converted = $this->convertWithIconv($string, $fromEncoding, $toEncoding)) !== null) {
+            return $converted;
+        } elseif (($converted = $this->convertWithUConverter($string, $fromEncoding, $toEncoding)) !== null) {
+            return $converted;
+        } elseif (($converted = $this->convertWithMultiByteString($string, $fromEncoding, $toEncoding)) !== null) {
+            return $converted;
         }
 
-        return $convertedString;
+        // No available method found
+        throw new ExtensionRequiredException(
+            "The 'iconv', 'intl' or the 'mbstring' extension is required to convert the JSON encoding.",
+            1478095252
+        );
     }
 
     /**
