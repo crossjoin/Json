@@ -75,8 +75,7 @@ class Encoder extends Converter
         // Check arguments
         if (!is_int($options)) {
             throw InvalidArgumentException::getInstance('integer', 'options', $options, 1478418109);
-        }
-        if (!is_int($depth)) {
+        } elseif (!is_int($depth)) {
             throw InvalidArgumentException::getInstance('integer', 'depth', $depth, 1478418110);
         }
 
@@ -85,25 +84,59 @@ class Encoder extends Converter
         // Try to encode the data
         // @codeCoverageIgnoreStart
         if (version_compare(PHP_VERSION, '5.5.0', '>=')) {
-            $json = \json_encode($value, $options, $depth);
+            $json = $this->encodePhpGte55($value, $options, $depth);
         } else {
-            // Although the json_last_error() function exists, json_encode() in PHP < 5.5.0 sometimes
-            // triggers an error, for example when an unsupported type is tried to be encoded. We
-            // suppress these errors and throw an own exception instead.
-            $json = @\json_encode($value, $options);
-            if ($value !== null && $json === 'null') {
-                throw new InvalidArgumentException('The type tried to encode is not supported.', 1478445896);
-            }
+            $json = $this->encodePhpLt55($value, $options);
         }
         // @codeCoverageIgnoreEnd
-
-        if ($json === false) {
-            throw $this->getNativeJsonErrorException();
-        }
 
         // Convert
         if ($toEncoding !== self::UTF8) {
             $json = $this->convertEncoding($json, self::UTF8, $toEncoding);
+        }
+
+        return $json;
+    }
+
+    /**
+     * @param mixed $value
+     * @param int $options
+     * @param int $depth
+     *
+     * @return string
+     * @throws \Crossjoin\Json\Exception\NativeJsonErrorException
+     */
+    private function encodePhpGte55($value, $options, $depth)
+    {
+        $json = \json_encode($value, $options, $depth);
+
+        if (!is_string($json)) {
+            throw $this->getNativeJsonErrorException();
+        }
+
+        return $json;
+    }
+
+    /**
+     * @param mixed $value
+     * @param int $options
+     *
+     * @return string
+     * @throws \Crossjoin\Json\Exception\NativeJsonErrorException
+     * @throws \Crossjoin\Json\Exception\InvalidArgumentException
+     */
+    private function encodePhpLt55($value, $options)
+    {
+        // Although the json_last_error() function exists, json_encode() in PHP < 5.5.0 sometimes
+        // triggers an error, for example when an unsupported type is tried to be encoded. We
+        // suppress these errors and throw an own exception instead.
+        $json = @\json_encode($value, $options);
+        if ($value !== null && $json === 'null') {
+            throw new InvalidArgumentException('The type tried to encode is not supported.', 1478445896);
+        }
+
+        if (!is_string($json)) {
+            throw $this->getNativeJsonErrorException();
         }
 
         return $json;
