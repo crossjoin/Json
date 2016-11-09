@@ -44,28 +44,18 @@ abstract class Converter
         }
 
         // Try different conversion functions, ordered by speed
-        // @codeCoverageIgnoreStart
-        if (function_exists('iconv')) {
-            $string = iconv($fromEncoding, $toEncoding . '//IGNORE', $string);
-            if ($string === false) {
-                throw new ConversionFailedException('Error while converting the encoding.', 1478193725);
-            }
-        } elseif (class_exists('\\UConverter')) {
-            /** @noinspection PhpUndefinedClassInspection */
-            $uConverter = new \UConverter($toEncoding, $fromEncoding);
-            /** @noinspection PhpUndefinedMethodInspection */
-            $string = $uConverter->convert($string);
-        } elseif (function_exists('mb_convert_encoding')) {
-            $string = mb_convert_encoding($string, $toEncoding, $fromEncoding);
-        } else {
+        if (
+            ($convertedString = $this->convertWithIconv($string, $fromEncoding, $toEncoding)) === null &&
+            ($convertedString = $this->convertWithUConverter($string, $fromEncoding, $toEncoding)) === null &&
+            ($convertedString = $this->convertWithMultiByteString($string, $fromEncoding, $toEncoding)) === null
+        ) {
             throw new ExtensionRequiredException(
-                "The 'iconv', 'intl' or the 'Multibyte String' extension is required to convert the JSON encoding.",
+                "The 'iconv', 'intl' or the 'mbstring' extension is required to convert the JSON encoding.",
                 1478095252
             );
         }
-        // @codeCoverageIgnoreEnd
 
-        return $string;
+        return $convertedString;
     }
 
     /**
@@ -107,5 +97,64 @@ abstract class Converter
         } else {
             return new NativeJsonErrorException('An error occurred while encoding/decoding JSON.', \json_last_error());
         }
+    }
+
+    /**
+     * @param $string
+     * @param $fromEncoding
+     * @param $toEncoding
+     *
+     * @return string|null
+     * @throws \Crossjoin\Json\Exception\ConversionFailedException
+     */
+    private function convertWithIconv($string, $fromEncoding, $toEncoding)
+    {
+        // @codeCoverageIgnoreStart
+        if (function_exists('iconv')) {
+            $string = iconv($fromEncoding, $toEncoding . '//IGNORE', $string);
+            if ($string === false) {
+                throw new ConversionFailedException('Error while converting the encoding.', 1478193725);
+            }
+            return $string;
+        }
+        return null;
+        // @codeCoverageIgnoreEnd
+    }
+
+    /**
+     * @param $string
+     * @param $fromEncoding
+     * @param $toEncoding
+     *
+     * @return string|null
+     */
+    private function convertWithUConverter($string, $fromEncoding, $toEncoding)
+    {
+        // @codeCoverageIgnoreStart
+        if (class_exists('\\UConverter')) {
+            /** @noinspection PhpUndefinedClassInspection */
+            $uConverter = new \UConverter($toEncoding, $fromEncoding);
+            /** @noinspection PhpUndefinedMethodInspection */
+            return $uConverter->convert($string);
+        }
+        return null;
+        // @codeCoverageIgnoreEnd
+    }
+
+    /**
+     * @param $string
+     * @param $fromEncoding
+     * @param $toEncoding
+     *
+     * @return string|null
+     */
+    private function convertWithMultiByteString($string, $fromEncoding, $toEncoding)
+    {
+        // @codeCoverageIgnoreStart
+        if (function_exists('mb_convert_encoding')) {
+            return mb_convert_encoding($string, $toEncoding, $fromEncoding);
+        }
+        return null;
+        // @codeCoverageIgnoreEnd
     }
 }
