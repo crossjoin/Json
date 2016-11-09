@@ -75,14 +75,7 @@ class Decoder extends Converter
         }
 
         // Get the first bytes
-        // (do not use str_* function here because of possible mb_str_* overloading)
-        preg_match('/^(.{0,8})/s', $json, $matches);
-        $bytes = array_key_exists(1, $matches) ? $matches[1] : '';
-
-        // Remove byte order marks
-        if ($this->ignoreByteOrderMark && $bytes !== '') {
-            $bytes = $this->removeByteOrderMark($bytes);
-        }
+        $bytes = $this->getEncodingBytes($json);
 
         // Check encoding
         if (preg_match('/^(?:[^\x00]{1,3}$|[^\x00]{4})/', $bytes)) {
@@ -95,26 +88,26 @@ class Decoder extends Converter
             // BUT the check also matches UTF-8 ByteOrderMarks, which isn't allowed in JSON.
             // So we need to do an additional check (if ByteOrderMarks have not already been removed before)
             if ($this->ignoreByteOrderMark || !preg_match('/^\xEF\xBB\xBF/', $bytes)) {
-                return 'UTF-8';
+                return self::UTF8;
             }
         } else if (preg_match('/^(?:\x00[^\x00]{1}$|\x00[^\x00]{1}.{2})/s', $bytes)) {
             // It's UTF-16BE encoded JSON if you have...
             // - 2 bytes and only the first is NUL ("00 xx")
             // - 4 or more bytes and only the first byte of the first 2 bytes is NUL ("00 xx")
-            return 'UTF-16BE';
+            return self::UTF16BE;
         } else if (preg_match('/^(?:[^\x00]{1}\x00$|[^\x00]{1}\x00[^\x00]{1}.{1})/s', $bytes)) {
             // It's UTF-16LE encoded JSON if you have...
             // - 2 bytes and only the second is NUL ("xx 00")
             // - 4 or more bytes and only the second of the first 3 bytes is NUL ("xx 00 xx")
-            return 'UTF-16LE';
+            return self::UTF16LE;
         } else if (preg_match('/^[\x00]{3}[^\x00]{1}/', $bytes)) {
             // It's UTF-32BE encoded JSON if you have...
             // - 4 or more bytes and only the first to third byte of the first 4 bytes are NUL ("00 00 00 xx")
-            return 'UTF-32BE';
+            return self::UTF32BE;
         } else if (preg_match('/^[^\x00]{1}[\x00]{3}/', $bytes)) {
             // It's UTF-32LE encoded JSON if you have...
             // - 4 or more bytes and only the second to fourth byte of the first 4 bytes are NUL ("xx 00 00 00")
-            return 'UTF-32LE';
+            return self::UTF32LE;
         }
 
         // No encoding found
@@ -157,30 +150,8 @@ class Decoder extends Converter
             throw InvalidArgumentException::getInstance('integer', 'options', $options, 1478418108);
         }
 
-        $fromEncoding = self::UTF8;
-        try {
-            // Ignore empty string
-            // (will cause a parsing error in the native json_decode function)
-            if ($json !== '') {
-                // Get encoding (before BOM is removed, because it's also check in getEncoding())
-                $fromEncoding = $this->getEncoding($json);
-
-                // Remove byte order marks
-                if ($this->ignoreByteOrderMark) {
-                    $json = $this->removeByteOrderMark($json);
-                }
-            }
-
-            // Convert encoding to UTF-8
-            // (because PHP cannot parse UTF-16/UTF-32 encoded JSON texts)
-            if ($fromEncoding !== self::UTF8) {
-                // Replace escaped unicode characters before the conversion
-                $json = $this->convertEncoding($json, $fromEncoding, self::UTF8);
-            }
-        } catch (JsonException $e) {
-            // Ignore exception here, so that the native json_decode function
-            // is called below and we get the same error as when calling this one.
-        }
+        // Prepare JSON data (remove BOMs and convert encoding)
+        $json = $this->prepareJson($json);
 
         // Try to decode the json text
         // @codeCoverageIgnoreStart
@@ -196,5 +167,59 @@ class Decoder extends Converter
         }
 
         return $data;
+    }
+
+    /**
+     * @param string $json
+     *
+     * @return string
+     * @throws \Crossjoin\Json\Exception\InvalidArgumentException
+     */
+    private function getEncodingBytes($json)
+    {
+        // Do not use str_* function here because of possible mb_str_* overloading
+        preg_match('/^(.{0,8})/s', $json, $matches);
+        $bytes = array_key_exists(1, $matches) ? $matches[1] : '';
+
+        // Remove byte order marks
+        if ($this->ignoreByteOrderMark && $bytes !== '') {
+            $bytes = $this->removeByteOrderMark($bytes);
+        }
+
+        return $bytes;
+    }
+
+    /**
+     * @param string $json
+     *
+     * @return string
+     */
+    private function prepareJson($json)
+    {
+        try {
+            // Ignore empty string
+            // (will cause a parsing error in the native json_decode function)
+            if ($json !== '') {
+                // Get encoding (before BOM is removed, because it's also check in getEncoding())
+                $fromEncoding = $this->getEncoding($json);
+
+                // Remove byte order marks
+                if ($this->ignoreByteOrderMark) {
+                    $json = $this->removeByteOrderMark($json);
+                }
+
+                // Convert encoding to UTF-8
+                // (because PHP cannot parse UTF-16/UTF-32 encoded JSON texts)
+                if ($fromEncoding !== self::UTF8) {
+                    // Replace escaped unicode characters before the conversion
+                    $json = $this->convertEncoding($json, $fromEncoding, self::UTF8);
+                }
+            }
+        } catch (JsonException $e) {
+            // Ignore exception here, so that the native json_decode function
+            // is called by the decode() method and we get the native error message.
+        }
+
+        return $json;
     }
 }
