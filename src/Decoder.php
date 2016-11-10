@@ -69,42 +69,50 @@ class Decoder extends Converter
         $bytes = $this->getEncodingBytes($json);
 
         // Check encoding
-        if (preg_match('/^(?:[^\x00]{1,3}$|[^\x00]{4})/', $bytes)) {
-            // It's UTF-8 encoded JSON if you have...
-            // - 1 byte and it's not NUL ("xx")
-            // - 2 bytes and none of them are NUL ("xx xx")
-            // - 3 bytes and they are not NUL ("xx xx xx")
-            // - 4 or more bytes and the first 4 bytes are not NUL ("xx xx xx xx")
-            //
-            // BUT the check also matches UTF-8 ByteOrderMarks, which isn't allowed in JSON.
-            // So we need to do an additional check (if ByteOrderMarks have not already been removed before)
-            if ($this->ignoreByteOrderMark || !preg_match('/^\xEF\xBB\xBF/', $bytes)) {
-                return self::UTF8;
+        foreach ($this->getEncodingPatterns() as $encoding => $regExp) {
+            if (preg_match($regExp, $bytes)) {
+                // Additional check, because the UTF-8 pattern also matches UTF-8 ByteOrderMarks (if ByteOrderMarks
+                //have not already been removed before).
+                if ($encoding !== self::UTF8 || $this->ignoreByteOrderMark || !preg_match('/^\xEF\xBB\xBF/', $bytes)) {
+                    return $encoding;
+                }
+                break;
             }
-        } else if (preg_match('/^(?:\x00[^\x00]{1}$|\x00[^\x00]{1}.{2})/s', $bytes)) {
-            // It's UTF-16BE encoded JSON if you have...
-            // - 2 bytes and only the first is NUL ("00 xx")
-            // - 4 or more bytes and only the first byte of the first 2 bytes is NUL ("00 xx")
-            return self::UTF16BE;
-        } else if (preg_match('/^(?:[^\x00]{1}\x00$|[^\x00]{1}\x00[^\x00]{1}.{1})/s', $bytes)) {
-            // It's UTF-16LE encoded JSON if you have...
-            // - 2 bytes and only the second is NUL ("xx 00")
-            // - 4 or more bytes and only the second of the first 3 bytes is NUL ("xx 00 xx")
-            return self::UTF16LE;
-        } else if (preg_match('/^[\x00]{3}[^\x00]{1}/', $bytes)) {
-            // It's UTF-32BE encoded JSON if you have...
-            // - 4 or more bytes and only the first to third byte of the first 4 bytes are NUL ("00 00 00 xx")
-            return self::UTF32BE;
-        } else if (preg_match('/^[^\x00]{1}[\x00]{3}/', $bytes)) {
-            // It's UTF-32LE encoded JSON if you have...
-            // - 4 or more bytes and only the second to fourth byte of the first 4 bytes are NUL ("xx 00 00 00")
-            return self::UTF32LE;
         }
 
         // No encoding found
         throw new EncodingNotSupportedException(
             'The JSON text is encoded with an unsupported encoding.',
             1478092834
+        );
+    }
+
+    /**
+     * @return array
+     */
+    private function getEncodingPatterns()
+    {
+        return array(
+            // It's UTF-8 encoded JSON if you have...
+            // - 1 byte and it's not NUL ("xx")
+            // - 2 bytes and none of them are NUL ("xx xx")
+            // - 3 bytes and they are not NUL ("xx xx xx")
+            // - 4 or more bytes and the first 4 bytes are not NUL ("xx xx xx xx")
+            self::UTF8    => '/^(?:[^\x00]{1,3}$|[^\x00]{4})/',
+            // It's UTF-16BE encoded JSON if you have...
+            // - 2 bytes and only the first is NUL ("00 xx")
+            // - 4 or more bytes and only the first byte of the first 2 bytes is NUL ("00 xx")
+            self::UTF16BE => '/^(?:\x00[^\x00]{1}$|\x00[^\x00]{1}.{2})/s',
+            // It's UTF-16LE encoded JSON if you have...
+            // - 2 bytes and only the second is NUL ("xx 00")
+            // - 4 or more bytes and only the second of the first 3 bytes is NUL ("xx 00 xx")
+            self::UTF16LE => '/^(?:[^\x00]{1}\x00$|[^\x00]{1}\x00[^\x00]{1}.{1})/s',
+            // It's UTF-32BE encoded JSON if you have...
+            // - 4 or more bytes and only the first to third byte of the first 4 bytes are NUL ("00 00 00 xx")
+            self::UTF32BE => '/^[\x00]{3}[^\x00]{1}/',
+            // It's UTF-32LE encoded JSON if you have...
+            // - 4 or more bytes and only the second to fourth byte of the first 4 bytes are NUL ("xx 00 00 00")
+            self::UTF32LE => '/^[^\x00]{1}[\x00]{3}/',
         );
     }
 
