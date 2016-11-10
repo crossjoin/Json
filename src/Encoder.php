@@ -48,14 +48,12 @@ class Encoder extends Converter
      */
     public function setEncoding($encoding)
     {
-        if (is_string($encoding)) {
-            if (in_array($encoding, array(self::UTF8, self::UTF16BE, self::UTF16LE, self::UTF32BE, self::UTF32LE), true)) {
-                $this->encoding = $encoding;
-            } else {
-                throw new EncodingNotSupportedException(sprintf("Unsupported encoding '%s'.", $encoding), 1478101930);
-            }
+        InvalidArgumentException::validateArgument(InvalidArgumentException::TYPE_STRING, 'encoding', $encoding, 1478196374);
+
+        if (in_array($encoding, array(self::UTF8, self::UTF16BE, self::UTF16LE, self::UTF32BE, self::UTF32LE), true)) {
+            $this->encoding = $encoding;
         } else {
-            throw InvalidArgumentException::getInstance('string', 'encoding', $encoding, 1478196374);
+            throw new EncodingNotSupportedException(sprintf("Unsupported encoding '%s'.", $encoding), 1478101930);
         }
     }
 
@@ -73,11 +71,8 @@ class Encoder extends Converter
     public function encode($value, $options = 0, $depth = 512)
     {
         // Check arguments
-        if (!is_int($options)) {
-            throw InvalidArgumentException::getInstance('integer', 'options', $options, 1478418109);
-        } elseif (!is_int($depth)) {
-            throw InvalidArgumentException::getInstance('integer', 'depth', $depth, 1478418110);
-        }
+        InvalidArgumentException::validateArgument(InvalidArgumentException::TYPE_INTEGER, 'options', $options, 1478418109);
+        InvalidArgumentException::validateArgument(InvalidArgumentException::TYPE_INTEGER, 'depth', $depth, 1478418110);
 
         // Try to encode the data
         // @codeCoverageIgnoreStart

@@ -33,13 +33,9 @@ abstract class Converter
     public function convertEncoding($string, $fromEncoding, $toEncoding)
     {
         // Check arguments
-        if (!is_string($string)) {
-            throw InvalidArgumentException::getInstance('string', 'json', $string, 1478195990);
-        } elseif (!is_string($fromEncoding)) {
-            throw InvalidArgumentException::getInstance('string', 'fromEncoding', $fromEncoding, 1478195991);
-        } elseif (!is_string($toEncoding)) {
-            throw InvalidArgumentException::getInstance('string', 'toEncoding', $toEncoding, 1478195992);
-        }
+        InvalidArgumentException::validateArgument(InvalidArgumentException::TYPE_STRING, 'json', $string, 1478195990);
+        InvalidArgumentException::validateArgument(InvalidArgumentException::TYPE_STRING, 'fromEncoding', $fromEncoding, 1478195991);
+        InvalidArgumentException::validateArgument(InvalidArgumentException::TYPE_STRING, 'toEncoding', $toEncoding, 1478195992);
 
         if ($fromEncoding === $toEncoding) {
             return $string;
@@ -87,9 +83,7 @@ abstract class Converter
     public function removeByteOrderMark($string)
     {
         // Check arguments
-        if (!is_string($string)) {
-            throw InvalidArgumentException::getInstance('string', 'string', $string, 1478195910);
-        }
+        InvalidArgumentException::validateArgument(InvalidArgumentException::TYPE_STRING, 'string', $string, 1478195910);
 
         return (string)preg_replace(
             '/^(?:' .

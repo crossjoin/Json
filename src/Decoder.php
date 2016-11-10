@@ -46,16 +46,9 @@ class Decoder extends Converter
     public function setIgnoreByteOrderMark($ignoreByteOrderMark)
     {
         // Check arguments
-        if (is_bool($ignoreByteOrderMark)) {
-            $this->ignoreByteOrderMark = $ignoreByteOrderMark;
-        } else {
-            throw InvalidArgumentException::getInstance(
-                'boolean',
-                'ignoreByteOrderMark',
-                $ignoreByteOrderMark,
-                1478195542
-            );
-        }
+        InvalidArgumentException::validateArgument(InvalidArgumentException::TYPE_BOOLEAN, 'ignoreByteOrderMark', $ignoreByteOrderMark, 1478195542);
+
+        $this->ignoreByteOrderMark = $ignoreByteOrderMark;
     }
 
     /**
@@ -70,9 +63,7 @@ class Decoder extends Converter
     public function getEncoding($json)
     {
         // Check arguments
-        if (!is_string($json)) {
-            throw InvalidArgumentException::getInstance('string', 'json', $json, 1478195652);
-        }
+        InvalidArgumentException::validateArgument(InvalidArgumentException::TYPE_STRING, 'json', $json, 1478195652);
 
         // Get the first bytes
         $bytes = $this->getEncodingBytes($json);
@@ -137,15 +128,10 @@ class Decoder extends Converter
     public function decode($json, $assoc = false, $depth = 512, $options = 0)
     {
         // Check arguments
-        if (!is_string($json)) {
-            throw InvalidArgumentException::getInstance('string', 'json', $json, 1478418105);
-        } elseif (!is_bool($assoc)) {
-            throw InvalidArgumentException::getInstance('boolean', 'assoc', $assoc, 1478418106);
-        } elseif (!is_int($depth)) {
-            throw InvalidArgumentException::getInstance('integer', 'depth', $assoc, 1478418107);
-        } elseif (!is_int($options)) {
-            throw InvalidArgumentException::getInstance('integer', 'options', $options, 1478418108);
-        }
+        InvalidArgumentException::validateArgument(InvalidArgumentException::TYPE_STRING, 'json', $json, 1478418105);
+        InvalidArgumentException::validateArgument(InvalidArgumentException::TYPE_BOOLEAN, 'assoc', $assoc, 1478418106);
+        InvalidArgumentException::validateArgument(InvalidArgumentException::TYPE_INTEGER, 'depth', $depth, 1478418107);
+        InvalidArgumentException::validateArgument(InvalidArgumentException::TYPE_INTEGER, 'options', $options, 1478418108);
 
         // Prepare JSON data (remove BOMs and convert encoding)
         $json = $this->prepareJson($json);
