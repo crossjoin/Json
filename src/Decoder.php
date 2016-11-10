@@ -158,6 +158,7 @@ class Decoder extends Converter
      */
     private function decodePhpGte54($json, $assoc, $depth, $options)
     {
+        // @codeCoverageIgnoreStart
         $data = \json_decode($json, $assoc, $depth, $options);
 
         if (\json_last_error() !== \JSON_ERROR_NONE) {
@@ -165,6 +166,7 @@ class Decoder extends Converter
         }
 
         return $data;
+        // @codeCoverageIgnoreEnd
     }
 
     /**
@@ -177,6 +179,7 @@ class Decoder extends Converter
      */
     private function decodePhpLt54($json, $assoc, $depth)
     {
+        // @codeCoverageIgnoreStart
         $data = \json_decode($json, $assoc, $depth);
 
         if (\json_last_error() !== \JSON_ERROR_NONE) {
@@ -184,6 +187,7 @@ class Decoder extends Converter
         }
 
         return $data;
+        // @codeCoverageIgnoreEnd
     }
 
     /**

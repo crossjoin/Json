@@ -74,6 +74,7 @@ class ConverterTest extends \PHPUnit_Framework_TestCase
      * @expectedException \Crossjoin\Json\Exception\InvalidArgumentException
      * @expectedExceptionCode 1478195990
      * @covers ::convertEncoding
+     * @covers ::tryConvertEncoding
      */
     public function testInvalidConvertEncodingStringValue($value)
     {
@@ -89,6 +90,7 @@ class ConverterTest extends \PHPUnit_Framework_TestCase
      * @expectedException \Crossjoin\Json\Exception\InvalidArgumentException
      * @expectedExceptionCode 1478195991
      * @covers ::convertEncoding
+     * @covers ::tryConvertEncoding
      */
     public function testInvalidConvertEncodingFromEncodingValue($value)
     {
@@ -104,6 +106,7 @@ class ConverterTest extends \PHPUnit_Framework_TestCase
      * @expectedException \Crossjoin\Json\Exception\InvalidArgumentException
      * @expectedExceptionCode 1478195992
      * @covers ::convertEncoding
+     * @covers ::tryConvertEncoding
      */
     public function testInvalidConvertEncodingToEncodingValue($value)
     {

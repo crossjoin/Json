@@ -103,11 +103,13 @@ abstract class Converter
      */
     protected function getNativeJsonErrorException()
     {
+        // @codeCoverageIgnoreStart
         if (function_exists('\json_last_error_msg')) {
             return new NativeJsonErrorException(\json_last_error_msg(), \json_last_error());
         } else {
             return new NativeJsonErrorException('An error occurred while encoding/decoding JSON.', \json_last_error());
         }
+        // @codeCoverageIgnoreEnd
     }
 
     /**

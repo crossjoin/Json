@@ -97,6 +97,7 @@ class Encoder extends Converter
      */
     private function encodePhpGte55($value, $options, $depth)
     {
+        // @codeCoverageIgnoreStart
         $json = \json_encode($value, $options, $depth);
 
         if (!is_string($json)) {
@@ -104,6 +105,7 @@ class Encoder extends Converter
         }
 
         return $json;
+        // @codeCoverageIgnoreEnd
     }
 
     /**
@@ -119,6 +121,8 @@ class Encoder extends Converter
         // Although the json_last_error() function exists, json_encode() in PHP < 5.5.0 sometimes
         // triggers an error, for example when an unsupported type is tried to be encoded. We
         // suppress these errors and throw an own exception instead.
+
+        // @codeCoverageIgnoreStart
         $json = @\json_encode($value, $options);
         if ($value !== null && $json === 'null') {
             throw new InvalidArgumentException('The type tried to encode is not supported.', 1478445896);
@@ -129,5 +133,6 @@ class Encoder extends Converter
         }
 
         return $json;
+        // @codeCoverageIgnoreEnd
     }
 }
