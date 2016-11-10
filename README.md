@@ -29,7 +29,7 @@ or by adding the following requirement to your `composer.json` file:
 ```
 {
     "require": {
-        "crossjoin/json": "~1.0.0"
+        "crossjoin/json": "^1.0.0"
     }
 }
 ```
