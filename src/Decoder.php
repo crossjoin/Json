@@ -139,55 +139,17 @@ class Decoder extends Converter
         // Try to decode the json text
         // @codeCoverageIgnoreStart
         if (version_compare(PHP_VERSION, '5.4.0', '>=')) {
-            return $this->decodePhpGte54($json, $assoc, $depth, $options);
+            $data = \json_decode($json, $assoc, $depth, $options);
         } else {
-            return $this->decodePhpLt54($json, $assoc, $depth);
+            $data = \json_decode($json, $assoc, $depth);
         }
         // @codeCoverageIgnoreEnd
-    }
-
-    /** @noinspection MoreThanThreeArgumentsInspection */
-    /**
-     * @param string $json
-     * @param bool $assoc
-     * @param int $depth
-     * @param int $options
-     *
-     * @return mixed
-     * @throws \Crossjoin\Json\Exception\NativeJsonErrorException
-     */
-    private function decodePhpGte54($json, $assoc, $depth, $options)
-    {
-        // @codeCoverageIgnoreStart
-        $data = \json_decode($json, $assoc, $depth, $options);
 
         if (\json_last_error() !== \JSON_ERROR_NONE) {
             throw $this->getNativeJsonErrorException();
         }
 
         return $data;
-        // @codeCoverageIgnoreEnd
-    }
-
-    /**
-     * @param string $json
-     * @param bool $assoc
-     * @param int $depth
-     *
-     * @return mixed
-     * @throws \Crossjoin\Json\Exception\NativeJsonErrorException
-     */
-    private function decodePhpLt54($json, $assoc, $depth)
-    {
-        // @codeCoverageIgnoreStart
-        $data = \json_decode($json, $assoc, $depth);
-
-        if (\json_last_error() !== \JSON_ERROR_NONE) {
-            throw $this->getNativeJsonErrorException();
-        }
-
-        return $data;
-        // @codeCoverageIgnoreEnd
     }
 
     /**
