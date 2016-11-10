@@ -145,9 +145,8 @@ class Decoder extends Converter
         }
         // @codeCoverageIgnoreEnd
 
-        if (\json_last_error() !== \JSON_ERROR_NONE) {
-            throw $this->getNativeJsonErrorException();
-        }
+        // Check if the native JSON decoder created an error
+        $this->checkForNativeJsonError();
 
         return $data;
     }
@@ -197,5 +196,15 @@ class Decoder extends Converter
         }
 
         return $json;
+    }
+
+    /**
+     * @throws \Crossjoin\Json\Exception\NativeJsonErrorException
+     */
+    private function checkForNativeJsonError()
+    {
+        if (\json_last_error() !== \JSON_ERROR_NONE) {
+            throw $this->getNativeJsonErrorException();
+        }
     }
 }
